@@ -176,6 +176,13 @@ public final class CharacterRenderer {
      * @param alphaA overall opacity
      */
     private int[] skin;
+    private int trail, blade;
+
+    /** Cosmetic weapon colours for the next draw() (0 = default). */
+    public void setWeapon(int trailColor, int bladeColor) {
+        trail = trailColor;
+        blade = bladeColor;
+    }
 
     /** Cosmetic palette for the next draw() call (null = default look). */
     public void setSkin(int[] palette) {
@@ -311,12 +318,12 @@ public final class CharacterRenderer {
         float hr = "ryujin".equals(id) ? 6.5f : 5f;
         fill.setColor(c(OUTLINE));
         cv.drawCircle(x2, y2, hr + 1.8f, fill);
-        int handCol = "ryujin".equals(id) ? s.accent : "akira".equals(id) ? 0xFF2A4C8F : s.dark;
+        int handCol = trail != 0 && !"kaze".equals(id) ? trail : "ryujin".equals(id) ? s.accent : "akira".equals(id) ? 0xFF2A4C8F : s.dark;
         fill.setColor(c(handCol));
         cv.drawCircle(x2, y2, hr, fill);
         if (front && ("ryujin".equals(id) || "akira".equals(id)) && alpha > 0.3f) {
             float g = 0.35f + pose.glow * 0.5f;
-            glow.setShader(new RadialGradient(x2, y2, 16, Palette.withAlpha(s.accent, g * alpha), 0x00000000, Shader.TileMode.CLAMP));
+            glow.setShader(new RadialGradient(x2, y2, 16, Palette.withAlpha(trail != 0 ? trail : s.accent, g * alpha), 0x00000000, Shader.TileMode.CLAMP));
             cv.drawCircle(x2, y2, 16, glow);
             glow.setShader(null);
         }
@@ -329,10 +336,10 @@ public final class CharacterRenderer {
         stroke.setColor(c(OUTLINE));
         stroke.setStrokeWidth(5.5f);
         cv.drawLine(gx, gy, bx, by, stroke);
-        stroke.setColor(c(0xFFE8ECFF));
+        stroke.setColor(c(blade != 0 ? blade : 0xFFE8ECFF));
         stroke.setStrokeWidth(3f);
         cv.drawLine(hx, hy, bx, by, stroke);
-        stroke.setColor(c(s.accent));
+        stroke.setColor(c(trail != 0 ? trail : s.accent));
         stroke.setStrokeWidth(1.4f);
         cv.drawLine(hx, hy, bx, by, stroke);
         stroke.setColor(c(0xFF3A2B1A));

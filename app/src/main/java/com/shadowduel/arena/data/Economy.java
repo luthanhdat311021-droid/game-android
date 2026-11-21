@@ -24,6 +24,26 @@ public final class Economy {
     public static final Map<String, JSONObject> skinPalette = new HashMap<>();
     /** Equipped training-only armor bonus (never used online). */
     public static int trainingDefensePct;
+    public static final Map<String, JSONObject> weaponFx = new HashMap<>();
+    public static String spawnFx, killFx;
+
+    /** Applies the signed-in player's equipped cosmetics to a fighter (look only). */
+    public static void dress(com.shadowduel.arena.game.sim.Fighter f) {
+        f.skin = palette(skinPalette.get(f.charId));
+        JSONObject w = weaponFx.get(f.charId);
+        f.trail = color(w, "trail");
+        f.blade = color(w, "blade");
+        f.spawnFx = spawnFx;
+        f.killFx = killFx;
+    }
+
+    public static int color(JSONObject o, String key) {
+        try {
+            return o != null && o.has(key) ? Color.parseColor(o.getString(key)) : 0;
+        } catch (Exception e) {
+            return 0;
+        }
+    }
 
     public interface Done {
         void done(String error);
@@ -78,9 +98,20 @@ public final class Economy {
                     (eq, e2) -> {
                         skinPalette.clear();
                         trainingDefensePct = 0;
+                        weaponFx.clear();
+                        spawnFx = null;
+                        killFx = null;
                         for (int i = 0; eq != null && i < eq.length(); i++) {
                             JSONObject r = eq.optJSONObject(i);
                             JSONObject it = r.optJSONObject("items");
+                            JSONObject gfx = it == null ? null : it.optJSONObject("gameplay_effect");
+                            if (it != null && gfx != null && owned.contains(r.optString("item_id"))) {
+                                if ("weapon".equals(r.optString("slot"))) weaponFx.put(it.optString("character_id", r.optString("character_id")), gfx);
+                                if ("effect".equals(r.optString("slot"))) {
+                                    if (gfx.has("spawn")) spawnFx = gfx.optString("spawn");
+                                    if (gfx.has("kill")) killFx = gfx.optString("kill");
+                                }
+                            }
                             if ("equipment".equals(r.optString("slot")) && it != null && owned.contains(r.optString("item_id"))) {
                                 JSONObject tr = it.optJSONObject("gameplay_effect") == null ? null : it.optJSONObject("gameplay_effect").optJSONObject("training");
                                 if (tr != null) trainingDefensePct = tr.optInt("defense_pct");

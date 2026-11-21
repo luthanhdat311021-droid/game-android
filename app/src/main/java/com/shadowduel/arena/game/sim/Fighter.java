@@ -53,6 +53,9 @@ public final class Fighter {
     public int netActT;
     /** Cosmetic palette [main, dark, accent, hair] or null. Never affects gameplay. */
     public int[] skin;
+    /** Cosmetic weapon colours (0 = default) and equipped effects ("lightning", "fireworks"). */
+    public int trail, blade;
+    public String spawnFx, killFx;
     /** Training/PvE-only item effects (offline sessions). Always neutral in online PvP. */
     public int boostT;
     public double damageTakenMul = 1;

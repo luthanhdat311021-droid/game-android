@@ -37,7 +37,8 @@ class Match {
     this.byPlayer.set(m.playerId, {
       fid, member: m, queue: [], lastSeq: 0, mx: 0, my: 0, held: 0, view: new ClientView(), pending: []
     });
-    const look = m.cosmetics ? (m.cosmetics()[m.charId] || {}) : {};
+    const all = m.cosmetics ? m.cosmetics() : {};
+    const look = Object.assign({}, all['*'] || {}, all[m.charId] || {});
     this.looks = this.looks || new Map();
     this.looks.set(fid, look);
     return { id: fid, name: m.name, charId: m.charId, team: m.team, isBot: m.isBot, userId: m.userId, slot: m.slot };
@@ -46,7 +47,7 @@ class Match {
   roster() {
     // cosmetics only change how a fighter looks; stats are always the standard character stats
     return this.world.fighters.map(f => ({ id: f.id, name: f.name, charId: f.charId, team: f.team, isBot: f.isBot, slot: f.slot,
-      skin: (this.looks.get(f.id) || {}).skin || null, weapon: (this.looks.get(f.id) || {}).weapon || null }));
+      skin: (this.looks.get(f.id) || {}).skin || null, weapon: (this.looks.get(f.id) || {}).weapon || null, effect: (this.looks.get(f.id) || {}).effect || null }));
   }
 
   startMessage(playerId) {

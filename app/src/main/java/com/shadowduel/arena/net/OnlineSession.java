@@ -104,6 +104,11 @@ public final class OnlineSession implements GameSession, GameClient.MatchSink {
             f.slot = p.optInt("slot", id);
             JSONObject skin = p.optJSONObject("skin");   // server-verified cosmetic, look only
             f.skin = com.shadowduel.arena.data.Economy.palette(skin == null ? null : skin.optJSONObject("palette"));
+            JSONObject weapon = p.optJSONObject("weapon"), effect = p.optJSONObject("effect");
+            f.trail = com.shadowduel.arena.data.Economy.color(weapon, "trail");
+            f.blade = com.shadowduel.arena.data.Economy.color(weapon, "blade");
+            f.spawnFx = effect == null ? null : effect.optString("spawn", null);
+            f.killFx = effect == null ? null : effect.optString("kill", null);
             f.known = false;
             fighters.put(id, f);
             ordered.add(f);

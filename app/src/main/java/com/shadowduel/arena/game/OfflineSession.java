@@ -34,7 +34,7 @@ public final class OfflineSession implements GameSession {
         int total = bots + 1;
         boolean teams = world.teams;
         Fighter me = world.addFighter(0, playerName, charId, teams ? 1 : 0, false, 0, total);
-        me.skin = com.shadowduel.arena.data.Economy.palette(com.shadowduel.arena.data.Economy.skinPalette.get(charId));
+        com.shadowduel.arena.data.Economy.dress(me);
         // equipment stats only apply in Training (PvE); offline vs-bot matches and online PvP use standard stats
         if (training && com.shadowduel.arena.data.Economy.trainingDefensePct > 0) {
             me.damageTakenMul = 1 - com.shadowduel.arena.data.Economy.trainingDefensePct / 100.0;

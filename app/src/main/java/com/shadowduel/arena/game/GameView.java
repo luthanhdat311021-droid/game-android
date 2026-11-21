@@ -180,6 +180,7 @@ public final class GameView extends SurfaceView implements SurfaceHolder.Callbac
                     Fighter k = e.a >= 0 ? session.fighter(e.a) : null;
                     int vc = v != null ? Palette.forFighter(v.slot, v.team) : 0xFFFFFFFF;
                     vfx.knockout((float) e.x, (float) e.y - 40, v != null ? Palette.style(v.charId).accent : 0xFFFF3B5C);
+                    if (k != null && "fireworks".equals(k.killFx)) vfx.fireworks((float) e.x, (float) e.y - 60);
                     hud.killFeed(k != null ? k.name : null, k != null ? Palette.forFighter(k.slot, k.team) : 0,
                             v != null ? v.name : "?", vc, e.kind == null ? "" : e.kind);
                     if (e.a == me && e.v != me) {
@@ -191,6 +192,7 @@ public final class GameView extends SurfaceView implements SurfaceHolder.Callbac
                 }
                 case World.Event.SPAWN:
                     if (v != null) vfx.spawnBeam((float) e.x, (float) e.y, Palette.forFighter(v.slot, v.team));
+                    if (v != null && "lightning".equals(v.spawnFx)) vfx.lightningStrike((float) e.x, (float) e.y);
                     break;
                 case World.Event.LEFT:
                     if (v != null) hud.showBanner(v.name + " đã rời trận");
@@ -274,6 +276,7 @@ public final class GameView extends SurfaceView implements SurfaceHolder.Callbac
         vfx.drawSlash(c, f);
         float speedFrac = (float) Math.min(1, Math.abs(f.vx) / Math.max(1, f.speed));
         chars.setSkin(f.skin);
+        chars.setWeapon(f.trail, f.blade);
         chars.draw(c, f.charId, (float) f.rx, (float) f.ry, f.facing, anim, f.animTime, f.actionProgress(),
                 speedFrac, f.hitFlash, alpha, 1f);
     }

@@ -130,6 +130,28 @@ public final class Vfx {
         spawn(RING, x, y - 10, 0, 0, 0.45f, 70, color);
     }
 
+    /** Equipped kill effect: multi-colour firework bursts. */
+    public void fireworks(float x, float y) {
+        int[] cols = {0xFFFF3B5C, 0xFFFFC93B, 0xFF3BD5FF, 0xFF3BE08A, 0xFFB34BFF};
+        for (int i = 0; i < 4; i++) {
+            float bx = x + rf(-60, 60), by = y - rf(20, 110);
+            burst(bx, by, cols[i % cols.length], 16, 520);
+            spawn(RING, bx, by, 0, 0, 0.5f, 50, cols[(i + 2) % cols.length]);
+        }
+    }
+
+    /** Equipped spawn effect: a lightning bolt strikes the spawn point. */
+    public void lightningStrike(float x, float y) {
+        float top = y - 420;
+        for (int i = 0; i < 14; i++) {
+            float k = i / 13f;
+            P p = spawn(GLOW, x + rf(-18, 18), top + (y - top) * k, 0, 0, 0.35f, rf(18, 30), i % 2 == 0 ? 0xFFFFFFFF : 0xFF7FE3FF);
+            if (p != null) p.grav = 0;
+        }
+        spawn(RING, x, y - 6, 0, 0, 0.5f, 110, 0xFF7FE3FF);
+        burst(x, y - 20, 0xFFB8F2FF, 22, 600);
+    }
+
     public void burst(float x, float y, int color, int n, float speed) {
         for (int i = 0; i < n * quality; i++) {
             double a = rnd.nextDouble() * Math.PI * 2;
@@ -191,6 +213,7 @@ public final class Vfx {
         if (p < 0.15f || p > 0.7f) return;
         float k = (p - 0.15f) / 0.55f;
         Palette.Style s = Palette.style(f.charId);
+        int slashCol = f.trail != 0 ? f.trail : s.accent;
         float x = (float) f.rx, y = (float) f.ry - 44;
         float rad = shadow ? 70 : anim == ANIM_ATTACK3 || anim == ANIM_HEAVY ? 58 : 46;
         float start = anim == ANIM_ATTACK2 ? 60 : -70, sweep = 150 * Math.min(1, k * 1.6f);
@@ -203,7 +226,7 @@ public final class Vfx {
         add.setStrokeCap(Paint.Cap.ROUND);
         float fade = 1 - k;
         add.setStrokeWidth(shadow ? 22 : 14);
-        add.setColor(Palette.withAlpha(s.accent, 0.45f * fade));
+        add.setColor(Palette.withAlpha(slashCol, 0.45f * fade));
         c.drawArc(rect, start, sweep, false, add);
         add.setStrokeWidth(shadow ? 8 : 5);
         add.setColor(Palette.withAlpha(0xFFFFFFFF, 0.9f * fade));

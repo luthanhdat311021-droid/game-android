@@ -73,14 +73,14 @@ class SupabaseService {
   async cosmetics(userId) {
     if (!this.enabled || !userId) return {};
     const [eq, inv] = await Promise.all([
-      this.request('GET', `/rest/v1/player_equipment?select=slot,character_id,item_id,items(gameplay_effect,character_id)&player_id=eq.${userId}&slot=in.(skin,weapon)`),
+      this.request('GET', `/rest/v1/player_equipment?select=slot,character_id,item_id,items(gameplay_effect,character_id)&player_id=eq.${userId}&slot=in.(skin,weapon,effect)`),
       this.request('GET', `/rest/v1/player_inventory?select=item_id,expires_at&player_id=eq.${userId}`)
     ]);
     const owned = new Set((inv || []).filter(r => !r.expires_at || new Date(r.expires_at) > new Date()).map(r => r.item_id));
     const out = {};
     for (const e of eq || []) {
       if (!owned.has(e.item_id) || !e.items) continue;
-      const ch = e.items.character_id || e.character_id;
+      const ch = e.slot === 'effect' ? '*' : (e.items.character_id || e.character_id);
       (out[ch] = out[ch] || {})[e.slot] = Object.assign({ id: e.item_id }, e.items.gameplay_effect || {});
     }
     return out;
