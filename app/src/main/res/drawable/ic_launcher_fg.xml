@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Crossed blades over a purple energy core -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path android:fillColor="#B34BFF" android:fillAlpha="0.35" android:pathData="M54,54m-26,0a26,26 0,1 1,52 0a26,26 0,1 1,-52 0" />
+    <path android:fillColor="#3BD5FF" android:fillAlpha="0.6" android:pathData="M54,54m-14,0a14,14 0,1 1,28 0a14,14 0,1 1,-28 0" />
+    <path android:fillColor="#FFFFFF" android:pathData="M30,74 L72,32 L78,30 L76,36 L34,78 Z" />
+    <path android:fillColor="#FF3B5C" android:pathData="M78,74 L36,32 L30,30 L32,36 L74,78 Z" />
+    <path android:fillColor="#FFC93B" android:pathData="M28,70 L38,80 L34,84 L24,74 Z" />
+    <path android:fillColor="#FFC93B" android:pathData="M80,70 L70,80 L74,84 L84,74 Z" />
+</vector>

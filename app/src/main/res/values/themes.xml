@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.ShadowDuel" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/accent_red</item>
+        <item name="colorOnPrimary">@color/text_primary</item>
+        <item name="colorPrimaryContainer">#5A1222</item>
+        <item name="colorSecondary">@color/accent_cyan</item>
+        <item name="colorOnSecondary">@color/bg_deep</item>
+        <item name="colorTertiary">@color/accent_yellow</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorSurfaceContainer">@color/surface</item>
+        <item name="colorSurfaceContainerHigh">@color/surface_high</item>
+        <item name="colorOutline">@color/stroke</item>
+        <item name="android:colorBackground">@color/bg_night</item>
+        <item name="android:windowBackground">@drawable/bg_app</item>
+        <item name="android:statusBarColor">@color/bg_deep</item>
+        <item name="android:navigationBarColor">@color/bg_deep</item>
+        <item name="materialButtonStyle">@style/Widget.ShadowDuel.Button</item>
+        <item name="textInputStyle">@style/Widget.Material3.TextInputLayout.OutlinedBox</item>
+    </style>
+
+    <style name="Theme.ShadowDuel.Fullscreen">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@color/bg_deep</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
+
+    <style name="Widget.ShadowDuel.Button" parent="Widget.Material3.Button">
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:letterSpacing">0.06</item>
+        <item name="cornerRadius">6dp</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <style name="Widget.ShadowDuel.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:letterSpacing">0.06</item>
+        <item name="cornerRadius">6dp</item>
+        <item name="strokeColor">@color/accent_cyan</item>
+        <item name="android:textColor">@color/accent_cyan</item>
+    </style>
+
+    <style name="NavIcon">
+        <item name="android:layout_width">44dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:padding">9dp</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="tint">#FF8A93B0</item>
+    </style>
+
+    <style name="Text.Title" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:letterSpacing">0.04</item>
+    </style>
+
+    <style name="Text.Section" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:textColor">@color/accent_yellow</item>
+        <item name="android:letterSpacing">0.08</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="Text.Body" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+</resources>

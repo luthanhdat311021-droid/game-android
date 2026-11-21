@@ -1,0 +1,12 @@
+# Copy to local.properties (never commit local.properties).
+sdk.dir=C\:\\Users\\YOU\\AppData\\Local\\Android\\Sdk
+
+# Supabase Dashboard > Project Settings > API Keys.
+# Only the PUBLISHABLE (anon) key goes into the APK. Never put the service_role / secret key here.
+SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
+SUPABASE_PUBLISHABLE_KEY=sb_publishable_xxx
+
+# Game server WebSocket address. 10.0.2.2 = your PC as seen from the Android emulator.
+# Real phones: ws://<PC LAN IP>:8080 on the same Wi-Fi, or wss://your-domain for Internet play.
+# Can also be changed at runtime in Settings > Game server.
+GAME_SERVER_URL=ws://10.0.2.2:8080

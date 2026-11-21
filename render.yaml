@@ -1,0 +1,40 @@
+# Render Blueprint: deploys the Node.js game server (WebSocket + HTTP API) as one web service.
+# Render gives it a public https:// / wss:// address; the app connects with wss://<name>.onrender.com
+# Secrets (sync: false) are entered once in the Render dashboard, never committed.
+services:
+  - type: web
+    name: shadow-duel-server
+    runtime: node
+    plan: free
+    region: singapore
+    rootDir: .
+    buildCommand: cd server && npm ci --omit=dev
+    startCommand: node server/src/index.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SERVER_ID
+        value: render-1
+      - key: ALLOW_GUESTS
+        value: "true"
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_PUBLISHABLE_KEY
+        sync: false
+      - key: SUPABASE_SECRET_KEY
+        sync: false
+      - key: PAYMENTS_ENABLED
+        value: "false"
+      - key: DISTRIBUTION_CHANNEL
+        value: direct
+      - key: PAYMENT_PROVIDER
+        value: sepay
+      - key: SEPAY_BANK
+        sync: false
+      - key: SEPAY_ACCOUNT_NUMBER
+        sync: false
+      - key: SEPAY_ACCOUNT_NAME
+        sync: false
+      - key: SEPAY_WEBHOOK_API_KEY
+        sync: false

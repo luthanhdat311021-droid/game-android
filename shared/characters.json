@@ -1,0 +1,88 @@
+{
+  "_doc": "Frame data at 30 ticks/s. box = [offsetX, offsetY, width, height] relative to the feet, mirrored by facing. kb = knockback [x, y] in units/s. Shared by server (authoritative) and Android client (offline sim + prediction).",
+  "physics": {
+    "tickRate": 30,
+    "gravity": 2400,
+    "maxFall": 1150,
+    "bodyW": 36,
+    "bodyH": 70,
+    "groundAccel": 5200,
+    "airAccel": 2600,
+    "stunFriction": 1800,
+    "doubleJumpFactor": 0.88,
+    "dashTicks": 6,
+    "dashSpeed": 960,
+    "dashCooldown": 24,
+    "dropTicks": 8,
+    "energyMax": 100,
+    "energyRegen": 4,
+    "energyPerDamageDealt": 0.08,
+    "energyPerDamageTaken": 0.05,
+    "blockDamage": 0.3,
+    "blockKnockback": 0.3,
+    "blockStun": 0.4,
+    "comboWindow": 6,
+    "respawnTicks": 150,
+    "protectTicks": 60,
+    "assistWindowTicks": 300,
+    "fallCreditTicks": 150,
+    "hazardDamagePct": 0.06,
+    "hazardIntervalTicks": 10
+  },
+  "characters": {
+    "kaze": {
+      "name": "Kaze",
+      "title": "Shadow Ninja",
+      "hp": 900, "attack": 100, "defense": 35, "speed": 340, "jump": 880,
+      "description": "Nhanh nhẹn, combo liên tục, phi tiêu tầm xa.",
+      "basic": [
+        { "startup": 2, "active": 3, "recovery": 5, "dmg": 55, "kb": [160, -60], "stun": 9, "box": [8, -64, 60, 46], "lunge": 140 },
+        { "startup": 2, "active": 3, "recovery": 5, "dmg": 60, "kb": [180, -80], "stun": 9, "box": [8, -66, 64, 50], "lunge": 140 },
+        { "startup": 3, "active": 4, "recovery": 9, "dmg": 85, "kb": [360, -260], "stun": 14, "box": [4, -74, 74, 64], "lunge": 220 }
+      ],
+      "heavy": { "type": "projectile", "name": "Shuriken", "startup": 5, "active": 1, "recovery": 10, "dmg": 80, "kb": [220, -120], "stun": 12,
+        "proj": { "kind": "shuriken", "speed": 1050, "w": 26, "h": 26, "life": 32, "pierce": false, "offY": -44 } },
+      "special": { "type": "dash_slash", "name": "Shadow Slash", "cost": 50, "cooldown": 30, "startup": 3, "active": 9, "recovery": 10,
+        "dmg": 190, "kb": [380, -280], "stun": 20, "speed": 1350, "box": [-30, -76, 96, 80] }
+    },
+    "ryujin": {
+      "name": "Ryujin",
+      "title": "Flame Warrior",
+      "hp": 1100, "attack": 115, "defense": 60, "speed": 285, "jump": 840,
+      "description": "Trâu bò, đòn nặng hất văng, vùng lửa diện rộng.",
+      "basic": [
+        { "startup": 3, "active": 3, "recovery": 6, "dmg": 65, "kb": [180, -70], "stun": 10, "box": [8, -66, 62, 50], "lunge": 110 },
+        { "startup": 3, "active": 3, "recovery": 6, "dmg": 70, "kb": [200, -90], "stun": 10, "box": [8, -66, 66, 50], "lunge": 110 },
+        { "startup": 4, "active": 4, "recovery": 10, "dmg": 105, "kb": [420, -300], "stun": 15, "box": [4, -80, 80, 70], "lunge": 160 }
+      ],
+      "heavy": { "type": "melee", "name": "Dragon Uppercut", "startup": 8, "active": 4, "recovery": 12, "dmg": 160, "kb": [300, -620], "stun": 18,
+        "box": [6, -96, 70, 96], "lunge": 120 },
+      "special": { "type": "zone", "name": "Flame Burst", "cost": 50, "cooldown": 30, "startup": 8, "active": 1, "recovery": 12,
+        "dmg": 60, "kb": [260, -320], "stun": 12,
+        "zone": { "kind": "fire", "offX": 40, "w": 320, "h": 150, "life": 48, "interval": 10 } }
+    },
+    "akira": {
+      "name": "Akira",
+      "title": "Thunder Fighter",
+      "hp": 1000, "attack": 105, "defense": 45, "speed": 310, "jump": 860,
+      "description": "Cân bằng, tia sét xuyên thấu đánh trúng nhiều mục tiêu.",
+      "basic": [
+        { "startup": 2, "active": 3, "recovery": 6, "dmg": 60, "kb": [170, -70], "stun": 9, "box": [8, -64, 60, 48], "lunge": 120 },
+        { "startup": 2, "active": 3, "recovery": 6, "dmg": 62, "kb": [190, -80], "stun": 9, "box": [8, -64, 64, 48], "lunge": 120 },
+        { "startup": 4, "active": 4, "recovery": 9, "dmg": 95, "kb": [400, -240], "stun": 14, "box": [4, -76, 78, 66], "lunge": 180 }
+      ],
+      "heavy": { "type": "melee", "name": "Volt Knuckle", "startup": 6, "active": 4, "recovery": 11, "dmg": 140, "kb": [460, -260], "stun": 16,
+        "box": [6, -70, 84, 56], "lunge": 260 },
+      "special": { "type": "projectile", "name": "Thunder Strike", "cost": 50, "cooldown": 30, "startup": 6, "active": 1, "recovery": 12,
+        "dmg": 170, "kb": [320, -220], "stun": 18,
+        "proj": { "kind": "bolt", "speed": 1400, "w": 120, "h": 44, "life": 22, "pierce": true, "offY": -42 } }
+    }
+  },
+  "modes": {
+    "ffa": { "name": "Free For All", "durationSec": 300, "respawn": true, "teams": false },
+    "tdm": { "name": "Team Deathmatch", "durationSec": 300, "respawn": true, "teams": true, "scoreLimit": 30 },
+    "survival": { "name": "Survival Arena", "durationSec": 300, "respawn": false, "teams": false,
+      "zoneStartSec": 30, "zoneEndSec": 210, "zoneMinWidth": 480, "zoneDamagePct": 0.03 },
+    "training": { "name": "Training", "durationSec": 0, "respawn": true, "teams": false }
+  }
+}

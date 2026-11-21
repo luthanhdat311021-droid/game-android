@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg_night">#0A0D1C</color>
+    <color name="bg_deep">#060814</color>
+    <color name="surface">#141A33</color>
+    <color name="surface_high">#1D2547</color>
+    <color name="stroke">#2E3A6B</color>
+    <color name="text_primary">#F4F6FF</color>
+    <color name="text_secondary">#A6B0D9</color>
+    <color name="accent_red">#FF3B5C</color>
+    <color name="accent_blue">#2F7BFF</color>
+    <color name="accent_cyan">#3BD5FF</color>
+    <color name="accent_yellow">#FFC93B</color>
+    <color name="accent_green">#3BE08A</color>
+    <color name="accent_purple">#B34BFF</color>
+    <color name="team_red">#FF3B4E</color>
+    <color name="team_blue">#2F8BFF</color>
+    <color name="kaze">#7C5CFF</color>
+    <color name="ryujin">#FF6A2B</color>
+    <color name="akira">#3BD5FF</color>
+    <color name="ic_launcher_background">#0A0D1C</color>
+</resources>

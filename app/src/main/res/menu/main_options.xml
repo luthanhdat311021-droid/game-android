@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/menu_settings" android:icon="@drawable/ic_settings" android:title="@string/settings" app:showAsAction="ifRoom" />
+    <item android:id="@+id/menu_history" android:title="@string/history" app:showAsAction="never" />
+    <item android:id="@+id/menu_graphics" android:title="@string/graphics" app:showAsAction="never">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item android:id="@+id/gfx_low" android:title="@string/graphics_low" />
+                <item android:id="@+id/gfx_medium" android:title="@string/graphics_medium" />
+                <item android:id="@+id/gfx_high" android:title="@string/graphics_high" />
+            </group>
+        </menu>
+    </item>
+    <item android:id="@+id/menu_rules" android:title="@string/rules" app:showAsAction="never" />
+    <item android:id="@+id/menu_server" android:title="@string/server_status" app:showAsAction="never" />
+    <item android:id="@+id/menu_about" android:title="@string/about" app:showAsAction="never" />
+    <item android:id="@+id/menu_logout" android:title="@string/logout" app:showAsAction="never" />
+</menu>

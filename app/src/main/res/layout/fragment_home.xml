@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:padding="12dp">
+
+    <!-- Selected fighter -->
+    <LinearLayout
+        android:id="@+id/heroPanel"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.9"
+        android:background="@drawable/bg_panel_accent"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            style="@style/Text.Section"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Võ sĩ của bạn" />
+
+        <com.shadowduel.arena.ui.widget.CharacterPreviewView
+            android:id="@+id/heroPreview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/heroName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/text_primary"
+            android:textSize="22sp"
+            android:textStyle="bold|italic" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/changeHero"
+            style="@style/Widget.ShadowDuel.Button.Outlined"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/select_character" />
+    </LinearLayout>
+
+    <!-- Play -->
+    <LinearLayout
+        android:id="@+id/playPanel"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="12dp"
+        android:layout_weight="1.6"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/Text.Section"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chế độ chơi" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/modeChips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:checkedChip="@+id/chipFfa"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipFfa"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Free For All" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipTdm"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Team Deathmatch" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipSurvival"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Survival" />
+        </com.google.android.material.chip.ChipGroup>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/quickMatch"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/quick_match"
+            android:textSize="20sp"
+            app:backgroundTint="@color/accent_red" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/createRoom"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:text="@string/create_room"
+                app:backgroundTint="#FF6A3BFF" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/joinRoom"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:text="@string/join_room"
+                app:backgroundTint="#FF2F6BFF" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/training"
+                style="@style/Widget.ShadowDuel.Button.Outlined"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:text="@string/training" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/offlineBots"
+                style="@style/Widget.ShadowDuel.Button.Outlined"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:text="@string/offline_ffa" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/questsButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:text="NHIỆM VỤ"
+                app:backgroundTint="#FF2A8F5A" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/inventoryButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:text="KHO ĐỒ"
+                app:backgroundTint="#FF8F5A2A" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/shopButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="CỬA HÀNG"
+                app:backgroundTint="#FFB0287A" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/walletLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/accent_yellow"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:id="@+id/onlineList"
+            style="@style/Text.Body"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_panel"
+            android:padding="8dp"
+            android:text="Người chơi online sẽ hiển thị ở đây (Supabase Realtime Presence)."
+            android:textSize="12sp" />
+    </LinearLayout>
+</LinearLayout>

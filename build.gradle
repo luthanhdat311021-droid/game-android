@@ -1,0 +1,9 @@
+plugins {
+    id 'com.android.application' version '9.3.2' apply false
+}
+
+// The project lives in OneDrive, which locks files while syncing ("Cannot snapshot", "Failed to delete").
+// Build output goes outside OneDrive to avoid that.
+allprojects {
+    layout.buildDirectory = new File(System.getProperty('user.home'), ".android-build/ShadowDuel/${project.name}")
+}

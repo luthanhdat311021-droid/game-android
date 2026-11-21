@@ -1,0 +1,19 @@
+{
+  "name": "shadow-duel-server",
+  "version": "1.0.0",
+  "description": "Authoritative WebSocket game server for SHADOW DUEL: MULTIPLAYER BATTLE ARENA",
+  "main": "src/index.js",
+  "private": true,
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test test/sim.test.js test/server.test.js test/payments.test.js",
+    "loadtest": "node tools/load-test.js",
+    "trace": "node tools/make-trace.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
+

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/fragmentHost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="44dp" />
+
+    <!-- status line (replaces the toolbar) -->
+    <TextView
+        android:id="@+id/statusLine"
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:textColor="@color/accent_cyan"
+        android:textSize="13sp"
+        android:textStyle="bold|italic" />
+
+    <!-- compact floating navigation (replaces the bottom bar) -->
+    <LinearLayout
+        android:id="@+id/navGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/bg_panel"
+        android:orientation="horizontal"
+        android:paddingHorizontal="4dp">
+
+        <ImageButton android:id="@+id/navHome" style="@style/NavIcon" android:contentDescription="@string/nav_home" android:src="@drawable/ic_home" />
+        <ImageButton android:id="@+id/navRooms" style="@style/NavIcon" android:contentDescription="@string/nav_rooms" android:src="@drawable/ic_rooms" />
+        <ImageButton android:id="@+id/navRanking" style="@style/NavIcon" android:contentDescription="@string/nav_ranking" android:src="@drawable/ic_trophy" />
+        <ImageButton android:id="@+id/navProfile" style="@style/NavIcon" android:contentDescription="@string/nav_profile" android:src="@drawable/ic_person" />
+        <ImageButton android:id="@+id/navSettings" style="@style/NavIcon" android:contentDescription="@string/settings" android:src="@drawable/ic_settings" />
+        <ImageButton android:id="@+id/navMenu" style="@style/NavIcon" android:contentDescription="Menu" android:src="@drawable/ic_more" />
+    </LinearLayout>
+</FrameLayout>

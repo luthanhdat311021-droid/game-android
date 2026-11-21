@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/ctx_item_details" android:title="Chi tiết (Details)" />
+    <item android:id="@+id/ctx_item_equip" android:title="Trang bị / Tháo (Equip)" />
+    <item android:id="@+id/ctx_item_preview" android:title="Xem trước (Preview)" />
+</menu>

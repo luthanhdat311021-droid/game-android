@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Plain ws:// is allowed so the game can reach a local/LAN development server.
+     For Internet play, deploy the server behind TLS (wss://) and remove cleartext. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true" />
+</network-security-config>

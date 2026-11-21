@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/ctx_join" android:title="@string/join_room" />
+    <item android:id="@+id/ctx_copy" android:title="@string/copy_code" />
+    <item android:id="@+id/ctx_share" android:title="Chia sẻ mã phòng" />
+    <item android:id="@+id/ctx_details" android:title="@string/room_details" />
+</menu>

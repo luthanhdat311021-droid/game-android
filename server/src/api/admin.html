@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shadow Duel · Admin</title>
+<style>
+  body{margin:0;font:14px system-ui,sans-serif;background:#0a0d1c;color:#e8ecff}
+  header{padding:12px 18px;background:#141a33;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  h1{font:italic 700 18px system-ui;margin:0 12px 0 0;color:#ffc93b}
+  button,input,select,textarea{font:inherit;background:#1d2547;color:#e8ecff;border:1px solid #2e3a6b;border-radius:6px;padding:6px 10px}
+  button{cursor:pointer}button.on{background:#ff3b5c;border-color:#ff3b5c}
+  main{padding:16px}table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid #222a4d;padding:6px 8px;text-align:left;vertical-align:top}
+  th{color:#ffc93b;font-weight:600}.muted{color:#8a93b0}.err{color:#ff6b7f}textarea{width:100%;min-height:220px;font-family:monospace}
+  .row{display:flex;gap:8px;align-items:center;margin:8px 0;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<header>
+  <h1>SHADOW DUEL · Admin</h1>
+  <span id="who" class="muted">Chưa đăng nhập</span>
+  <input id="email" placeholder="email admin"><input id="pass" type="password" placeholder="mật khẩu"><button id="login">Đăng nhập</button>
+  <span style="flex:1"></span>
+  <button data-tab="orders" class="on">Đơn nạp</button><button data-tab="tx">Giao dịch</button>
+  <button data-tab="items">Vật phẩm</button><button data-tab="products">Shop</button><button data-tab="quests">Nhiệm vụ</button><button data-tab="audit">Audit log</button>
+</header>
+<main><div id="view" class="muted">Đăng nhập bằng tài khoản có trong bảng public.admins.</div></main>
+<script>
+const SUPA = '%%SUPABASE_URL%%', KEY = '%%SUPABASE_KEY%%';
+let token = sessionStorage.getItem('sd_admin_token') || '', tab = 'orders';
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function api(path, opt = {}) {
+  const r = await fetch(path, Object.assign({}, opt, { headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' } }));
+  const b = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(b.error || r.status);
+  return b;
+}
+$('#login').onclick = async () => {
+  const r = await fetch(SUPA + '/auth/v1/token?grant_type=password', { method: 'POST', headers: { apikey: KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: $('#email').value, password: $('#pass').value }) });
+  const b = await r.json();
+  if (!r.ok) { $('#who').textContent = 'Sai đăng nhập'; return; }
+  token = b.access_token; sessionStorage.setItem('sd_admin_token', token); $('#who').textContent = b.user.email; $('#pass').value = ''; show();
+};
+document.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => {
+  document.querySelectorAll('[data-tab]').forEach(x => x.classList.toggle('on', x === b)); tab = b.dataset.tab; show();
+});
+function table(rows, cols, extra) {
+  if (!rows.length) return '<p class="muted">Không có dữ liệu.</p>';
+  return '<table><tr>' + cols.map(c => `<th>${c}</th>`).join('') + (extra ? '<th></th>' : '') + '</tr>' +
+    rows.map(r => '<tr>' + cols.map(c => `<td>${esc(typeof r[c] === 'object' ? JSON.stringify(r[c]) : r[c])}</td>`).join('') + (extra ? `<td>${extra(r)}</td>` : '') + '</tr>').join('') + '</table>';
+}
+async function show() {
+  const v = $('#view');
+  if (!token) return;
+  try {
+    if (tab === 'orders') {
+      const st = new URLSearchParams(location.hash.slice(1)).get('status') || '';
+      const rows = await api('/api/admin/orders' + (st ? '?status=' + st : ''));
+      v.innerHTML = `<div class="row">Lọc: ${['', 'PENDING', 'PAID', 'NEEDS_REVIEW', 'EXPIRED'].map(s => `<button onclick="location.hash='status=${s}';show()">${s || 'Tất cả'}</button>`).join('')}</div>` +
+        table(rows, ['code', 'status', 'amount_vnd', 'gems', 'provider', 'status_note', 'created_at', 'paid_at'], r =>
+          r.status === 'NEEDS_REVIEW' || r.status === 'PENDING' || r.status === 'EXPIRED'
+            ? `<button onclick="resolve('${r.id}','grant')">Cấp Gems</button> <button onclick="resolve('${r.id}','cancel')">Hủy</button>`
+            : r.status === 'PAID' ? `<button onclick="resolve('${r.id}','refunded')">Đã hoàn tiền</button>` : '');
+    } else if (tab === 'tx') {
+      v.innerHTML = '<p class="muted">Mọi webhook đã nhận (kể cả sai số tiền / sai nội dung) để đối soát.</p>' +
+        table(await api('/api/admin/transactions'), ['id', 'provider', 'provider_txn_id', 'amount_vnd', 'content', 'result', 'order_id', 'created_at']);
+    } else if (tab === 'audit') {
+      v.innerHTML = table(await api('/api/admin/audit'), ['id', 'actor', 'action', 'detail', 'created_at']);
+    } else {
+      const rows = await api('/api/admin/' + tab);
+      v.innerHTML = `<p class="muted">Sửa JSON của một dòng rồi bấm Lưu (thêm mới: dùng id mới).</p><textarea id="edit">${esc(JSON.stringify(rows[0] || {}, null, 2))}</textarea>
+        <div class="row"><button onclick="save()">Lưu</button><span id="msg"></span></div>` +
+        table(rows, Object.keys(rows[0] || { id: 1 }).slice(0, 9), r => `<button onclick='pick(${esc(JSON.stringify(JSON.stringify(r)))})'>Sửa</button>`);
+    }
+  } catch (e) { v.innerHTML = `<p class="err">Lỗi: ${esc(e.message)}</p>`; }
+}
+window.pick = s => { $('#edit').value = JSON.stringify(JSON.parse(s), null, 2); scrollTo(0, 0); };
+window.save = async () => {
+  try { const row = JSON.parse($('#edit').value); await api(`/api/admin/${tab}/${row.id}`, { method: 'PUT', body: JSON.stringify(row) }); $('#msg').textContent = 'Đã lưu'; show(); }
+  catch (e) { $('#msg').textContent = 'Lỗi: ' + e.message; }
+};
+window.resolve = async (id, action) => {
+  const note = prompt('Ghi chú (bắt buộc cho đối soát):'); if (!note) return;
+  try { await api(`/api/admin/orders/${id}/resolve`, { method: 'POST', body: JSON.stringify({ action, note }) }); show(); } catch (e) { alert(e.message); }
+};
+window.show = show;
+if (token) { $('#who').textContent = 'Đã đăng nhập'; show(); }
+</script>
+</body>
+</html>

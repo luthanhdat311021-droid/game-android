@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/lobby_share" android:icon="@drawable/ic_share" android:title="Chia sẻ mã phòng" app:showAsAction="ifRoom" />
+    <item android:id="@+id/lobby_settings" android:title="Cài đặt phòng (chủ phòng)" app:showAsAction="never" />
+    <item android:id="@+id/lobby_rules" android:title="@string/rules" app:showAsAction="never" />
+    <item android:id="@+id/lobby_leave" android:title="@string/leave_room" app:showAsAction="never" />
+</menu>

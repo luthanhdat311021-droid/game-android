@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Shadow Duel Arena</string>
+    <string name="app_title">SHADOW DUEL</string>
+    <string name="app_subtitle">MULTIPLAYER BATTLE ARENA</string>
+
+    <string name="login">Đăng nhập</string>
+    <string name="register">Đăng ký</string>
+    <string name="email">Email</string>
+    <string name="password">Mật khẩu</string>
+    <string name="username">Tên người chơi</string>
+    <string name="play_guest">Chơi khách (server LAN)</string>
+    <string name="play_offline">Chơi offline</string>
+    <string name="no_account">Chưa có tài khoản? Đăng ký</string>
+    <string name="have_account">Đã có tài khoản? Đăng nhập</string>
+    <string name="supabase_missing">Chưa cấu hình Supabase (SUPABASE_URL / SUPABASE_PUBLISHABLE_KEY trong local.properties). Bạn vẫn có thể chơi offline hoặc chơi khách với server bật ALLOW_GUESTS.</string>
+
+    <string name="nav_home">Trang chủ</string>
+    <string name="nav_rooms">Phòng</string>
+    <string name="nav_ranking">Xếp hạng</string>
+    <string name="nav_profile">Hồ sơ</string>
+
+    <string name="quick_match">QUICK MATCH</string>
+    <string name="create_room">TẠO PHÒNG</string>
+    <string name="join_room">VÀO PHÒNG</string>
+    <string name="training">TRAINING</string>
+    <string name="offline_ffa">OFFLINE VS BOT</string>
+    <string name="room_code">Mã phòng</string>
+    <string name="ready">SẴN SÀNG</string>
+    <string name="not_ready">HỦY SẴN SÀNG</string>
+    <string name="start_match">BẮT ĐẦU</string>
+    <string name="leave_room">Rời phòng</string>
+    <string name="add_bot">+ BOT</string>
+    <string name="select_character">CHỌN NHÂN VẬT</string>
+    <string name="confirm">XÁC NHẬN</string>
+    <string name="settings">Cài đặt</string>
+    <string name="history">Lịch sử đấu</string>
+    <string name="logout">Đăng xuất</string>
+    <string name="about">Giới thiệu</string>
+    <string name="rules">Luật chơi</string>
+    <string name="graphics">Đồ họa</string>
+    <string name="graphics_low">Thấp (tiết kiệm pin)</string>
+    <string name="graphics_medium">Trung bình</string>
+    <string name="graphics_high">Cao (đầy đủ hiệu ứng)</string>
+    <string name="server_status">Trạng thái server</string>
+    <string name="copy_code">Sao chép mã phòng</string>
+    <string name="room_details">Xem chi tiết</string>
+    <string name="kick">Mời ra khỏi phòng</string>
+    <string name="view_profile">Xem thông tin</string>
+    <string name="back_lobby">VỀ PHÒNG CHỜ</string>
+    <string name="play_again">CHƠI LẠI</string>
+    <string name="home">TRANG CHỦ</string>
+
+    <string name="rules_text">FREE FOR ALL: mọi người là đối thủ, 5 phút, mỗi lần hạ gục +1 điểm, hồi sinh sau 5 giây. Nhiều hạ gục nhất thắng; hòa thì ít lần bị hạ hơn thắng, rồi tới sát thương gây ra nhiều hơn; vẫn bằng nhau là HÒA.\n\nTEAM DEATHMATCH: Đỏ vs Xanh, đồng đội không gây sát thương cho nhau, đội đạt 30 điểm trước hoặc nhiều điểm hơn khi hết giờ thắng; bằng điểm là HÒA.\n\nSURVIVAL ARENA: 1 mạng, vùng an toàn thu hẹp dần, ngoài vùng mất máu. Người cuối cùng sống sót thắng; hết giờ thì xếp theo máu còn lại.\n\nTRAINING: luyện tập với BOT, không tính rank, có thể hồi đầy nhân vật.</string>
+</resources>

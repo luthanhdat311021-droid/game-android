@@ -1,0 +1,77 @@
+plugins {
+    id 'com.android.application'
+}
+
+// Connection settings come from local.properties (not committed). See local.properties.example.
+def localProps = new Properties()
+def localFile = rootProject.file('local.properties')
+if (localFile.exists()) {
+    localFile.withInputStream { localProps.load(it) }
+}
+def prop = { String key, String fallback -> localProps.getProperty(key, fallback).trim() }
+
+android {
+    namespace 'com.shadowduel.arena'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId "com.shadowduel.arena"
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+        buildConfigField "String", "SUPABASE_URL", "\"${prop('SUPABASE_URL', '')}\""
+        buildConfigField "String", "SUPABASE_PUBLISHABLE_KEY", "\"${prop('SUPABASE_PUBLISHABLE_KEY', '')}\""
+        buildConfigField "String", "GAME_SERVER_URL", "\"${prop('GAME_SERVER_URL', 'ws://10.0.2.2:8080')}\""
+        buildConfigField "int", "PROTOCOL_VERSION", "1"
+    }
+
+    buildFeatures {
+        buildConfig true
+        viewBinding true
+    }
+
+    // Maps and character data are shared with the Node.js server (single source of truth).
+    sourceSets {
+        main {
+            assets.srcDirs += ['../shared']
+        }
+    }
+
+    androidResources {
+        ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~:!tools'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    testOptions {
+        unitTests.all {
+            // unit tests read the shared JSON straight from the repo
+            systemProperty 'shared.dir', rootProject.file('shared').absolutePath
+        }
+    }
+
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.json:json:20250517'
+}
