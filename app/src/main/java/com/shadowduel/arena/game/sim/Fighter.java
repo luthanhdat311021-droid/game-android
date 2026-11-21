@@ -31,7 +31,7 @@ public final class Fighter {
     public int hp;
     public double energy;
     public boolean grounded, groundOneWay;
-    public int onMover = -1, jumps = 2, airT, dropT;
+    public int onMover = -1, jumps, airT, dropT;
     public int act = ACT_NONE, actT, combo, queued, stunT, dashCd, specialCd;
     public boolean alive = true, eliminated, victory;
     public int respawnT, protectT;
@@ -80,6 +80,7 @@ public final class Fighter {
         this.speed = def.speed;
         this.jumpV = def.jump;
         this.hp = def.hp;
+        this.jumps = P.maxJumps;
     }
 
     /** Equipment bonuses in percent (same formula and cap as server ItemStats.js). */
@@ -224,7 +225,7 @@ public final class Fighter {
                         onMover = -1;
                         vy = 120;
                     } else if (jumps > 0) {
-                        vy = -(jumps == 2 ? jumpV : jumpV * P.doubleJumpFactor);
+                        vy = -(jumps == P.maxJumps ? jumpV : jumpV * P.doubleJumpFactor);
                         jumps--;
                         grounded = false;
                         onMover = -1;
@@ -251,11 +252,11 @@ public final class Fighter {
         if (gravity) vy = Math.min(vy + P.gravity * dt, P.maxFall);
         Physics.integrate(this, map, dt);
         if (grounded) {
-            jumps = 2;
+            jumps = P.maxJumps;
             airT = 0;
         } else {
             airT++;
-            if (airT > 4 && jumps == 2) jumps = 1;
+            if (airT > 4 && jumps == P.maxJumps) jumps = P.maxJumps - 1;
         }
     }
 

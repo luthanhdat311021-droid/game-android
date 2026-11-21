@@ -34,7 +34,7 @@ class Fighter {
     this.x = 0; this.y = 0; this.vx = 0; this.vy = 0; this.facing = 1;
     this.hp = this.maxHp; this.energy = 0;
     this.grounded = false; this.groundOneWay = false; this.onMover = -1;
-    this.jumps = 2; this.airT = 0; this.dropT = 0;
+    this.jumps = P.maxJumps || 2; this.airT = 0; this.dropT = 0;
     this.act = ACT.NONE; this.actT = 0; this.combo = 0; this.queued = 0;
     this.stunT = 0; this.dashCd = 0; this.specialCd = 0;
     this.alive = true; this.respawnT = 0; this.protectT = 0; this.eliminated = false;
@@ -152,7 +152,7 @@ class Fighter {
           if (my > 0 && this.grounded && this.groundOneWay) {
             this.dropT = P.dropTicks; this.grounded = false; this.onMover = -1; this.vy = 120;
           } else if (this.jumps > 0) {
-            this.vy = -(this.jumps === 2 ? this.jumpV : this.jumpV * P.doubleJumpFactor);
+            this.vy = -(this.jumps === (P.maxJumps || 2) ? this.jumpV : this.jumpV * P.doubleJumpFactor);
             this.jumps--; this.grounded = false; this.onMover = -1;
           }
         }
@@ -173,8 +173,8 @@ class Fighter {
 
     if (gravity) this.vy = Math.min(this.vy + P.gravity * dt, P.maxFall);
     integrate(this, map, dt);
-    if (this.grounded) { this.jumps = 2; this.airT = 0; }
-    else { this.airT++; if (this.airT > 4 && this.jumps === 2) this.jumps = 1; }
+    if (this.grounded) { this.jumps = P.maxJumps || 2; this.airT = 0; }
+    else { this.airT++; if (this.airT > 4 && this.jumps === (P.maxJumps || 2)) this.jumps = (P.maxJumps || 2) - 1; }
   }
 
   /** Animation code shown by clients. */

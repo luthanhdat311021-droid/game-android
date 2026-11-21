@@ -12,7 +12,7 @@ public final class Defs {
     public static final class Phys {
         public int tickRate;
         public double gravity, maxFall, bodyW, bodyH, groundAccel, airAccel, stunFriction, doubleJumpFactor;
-        public int dashTicks, dashCooldown, dropTicks;
+        public int dashTicks, dashCooldown, dropTicks, maxJumps = 2;
         public double dashSpeed, energyMax, energyRegen, energyPerDamageDealt, energyPerDamageTaken;
         public double blockDamage, blockKnockback, blockStun, hazardDamagePct;
         public int respawnTicks, protectTicks, assistWindowTicks, fallCreditTicks, hazardIntervalTicks;
@@ -77,6 +77,7 @@ public final class Defs {
         ph.airAccel = p.getDouble("airAccel");
         ph.stunFriction = p.getDouble("stunFriction");
         ph.doubleJumpFactor = p.getDouble("doubleJumpFactor");
+        ph.maxJumps = p.optInt("maxJumps", 2);
         ph.dashTicks = p.getInt("dashTicks");
         ph.dashSpeed = p.getDouble("dashSpeed");
         ph.dashCooldown = p.getInt("dashCooldown");

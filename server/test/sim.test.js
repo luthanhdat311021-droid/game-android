@@ -231,3 +231,19 @@ test('equipment stat bonuses are applied by the server and capped at +30%', () =
   const dmg = plain.maxHp - plain.hp;
   assert.equal(dmg, Math.round((65 * geared.attack / 100) * (100 / (100 + plain.defense))));
 });
+
+test('players can jump up to 4 times before landing (quadruple jump)', () => {
+  const w = world([P(0)]);
+  lineUp(w, [600]);
+  const f = w.fighters[0];
+  let jumpsDone = 0;
+  for (let i = 0; i < 6; i++) {
+    const vyBefore = f.vy;
+    run(w, 1, new Map([[0, { mx: 0, b: BTN.JUMP }]]));
+    if (f.vy < 0 && f.vy < vyBefore) jumpsDone++;
+    run(w, 6, new Map());
+  }
+  assert.equal(jumpsDone, 4, 'exactly 4 jumps, the 5th and 6th presses do nothing');
+  run(w, 200, new Map());
+  assert.equal(f.jumps, 4, 'jumps reset after landing');
+});

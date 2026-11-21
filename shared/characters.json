@@ -10,6 +10,7 @@
     "airAccel": 2600,
     "stunFriction": 1800,
     "doubleJumpFactor": 0.88,
+    "maxJumps": 4,
     "dashTicks": 6,
     "dashSpeed": 960,
     "dashCooldown": 24,
