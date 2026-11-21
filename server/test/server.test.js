@@ -195,3 +195,33 @@ test('without Supabase and without guest mode, login is refused', async () => {
     await assert.rejects(c.connect({ token: 'fake.jwt.token-that-is-long-enough' }), /AUTH_FAILED/);
   } finally { await server.stop(); }
 });
+
+test('ranked: guests refused; signed-in players are grouped by rating and the match auto-starts', async () => {
+  const { server, url } = await boot({ matchDurationOverrideSec: 2 });
+  try {
+    const cs = await clients(url, 5, 'R');
+    cs[4].send({ t: 'ranked_join', charId: 'kaze' });
+    assert.equal((await cs[4].wait(m => m.t === 'error')).code, 'RANKED_LOGIN_REQUIRED');
+    // pretend the first four are signed in (no Supabase in tests → everyone rated 1000)
+    cs.slice(0, 4).forEach((c, i) => { server.sessions.byPlayer.get(c.welcome.playerId).userId = 'user-' + i; });
+    for (const c of cs.slice(0, 4)) c.send({ t: 'ranked_join', charId: 'akira' });
+    const found = await Promise.all(cs.slice(0, 4).map(c => c.wait(m => m.t === 'ranked_found', 4000)));
+    assert.equal(found[0].players.length, 4);
+    const starts = await Promise.all(cs.slice(0, 4).map(c => c.wait(m => m.t === 'match_start', 4000)));
+    assert.equal(new Set(starts.map(s => s.matchId)).size, 1, 'all four in the same match');
+    const room = [...server.rooms.rooms.values()][0];
+    assert.equal(room.ranked, true);
+    assert.equal(room.isPrivate, true);
+    const end = await cs[0].wait(m => m.t === 'match_end', 6000);
+    assert.ok(end);
+    assert.equal(server.results.saved.get(end.matchId).ranked, true, 'result flagged ranked');
+    cs.forEach(c => c.close());
+  } finally { await server.stop(); }
+});
+
+test('ranked: the rating window widens with waiting time', () => {
+  const { Matchmaker } = require('../src/Matchmaker');
+  assert.equal(Matchmaker.window(0), 100);
+  assert.equal(Matchmaker.window(10000), 250);
+  assert.equal(Matchmaker.window(600000), 800);
+});

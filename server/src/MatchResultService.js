@@ -41,7 +41,8 @@ class MatchResultService {
       mvp_player_id: pick(result.mvp),
       top_kills_player_id: pick(result.topKills),
       most_damage_player_id: pick(result.mostDamage),
-      summary: { reason: result.reason, teamScore: result.teamScore },
+      ranked: !!match.room.ranked,
+      summary: { reason: result.reason, teamScore: result.teamScore, ranked: !!match.room.ranked },
       participants: result.standings.map(s => ({
         slot: s.slot, player_id: s.userId, display_name: s.name, is_bot: !!s.isBot, team_id: s.team,
         character_id: s.charId, kills: s.kills, deaths: s.deaths, assists: s.assists,

@@ -17,6 +17,7 @@ const { MatchManager } = require('./MatchManager');
 const { MatchResultService } = require('./MatchResultService');
 const { PROTOCOL_VERSION } = require('./game/constants');
 const { EconomyApi } = require('./api/EconomyApi');
+const { Matchmaker } = require('./Matchmaker');
 
 function createServer(cfg = config) {
   const supabase = new SupabaseService(cfg);
@@ -26,6 +27,7 @@ function createServer(cfg = config) {
   rooms = new RoomManager(cfg, sessions, supabase);
   const matches = new MatchManager(cfg, rooms, sessions, results);
   rooms.matchManager = matches;
+  const matchmaker = new Matchmaker(cfg, rooms, sessions, supabase, matches);
 
   const economy = new EconomyApi(cfg, supabase);
   const httpServer = http.createServer(async (req, res) => {
@@ -71,6 +73,7 @@ function createServer(cfg = config) {
           // equipped cosmetics are re-read from the database (never taken from the client)
           ws.session.cosmetics = await supabase.cosmetics(ws.session.userId).catch(() => ws.session.cosmetics || {});
         }
+        if (msg.t === 'ranked_join') { await matchmaker.join(ws.session, msg.charId); return; }
         handle(ws.session, msg);
       } catch (e) {
         if (e instanceof GameError) send(ws, { t: 'error', code: e.code, message: e.message, re: msg.t });
@@ -153,10 +156,11 @@ function createServer(cfg = config) {
         if (Number.isFinite(msg.rtt)) s.rtt = msg.rtt;
         return;
       case 'list_rooms': sessions.send(s, { t: 'rooms', rooms: rooms.list() }); return;
-      case 'create_room': rooms.create(s, msg); return;
+      case 'create_room': matchmaker.leave(s, false); rooms.create(s, msg); return;
       case 'join_room': rooms.join(s, msg.code, msg.password, msg.charId); return;
       case 'quick_match': rooms.quickMatch(s, msg.mode, msg.charId); return;
       case 'leave_room': rooms.leave(s); sessions.send(s, { t: 'left_room' }); return;
+      case 'ranked_cancel': matchmaker.leave(s); return;
       case 'select_character': rooms.selectCharacter(s, msg.charId); return;
       case 'select_team': rooms.selectTeam(s, msg.team); return;
       case 'ready': rooms.setReady(s, msg.ready); return;
@@ -188,6 +192,7 @@ function createServer(cfg = config) {
       try { await supabase.clearServerRooms(cfg.serverId); } catch (e) { log.warn('could not clear stale rooms:', e.message); }
     }
     economy.start();
+    matchmaker.start();
     await new Promise(r => httpServer.listen(cfg.port, cfg.host, r));
     const addr = httpServer.address();
     log.info(`SHADOW DUEL server on ws://${cfg.host}:${addr.port}  supabase=${supabase.enabled} guests=${cfg.allowGuests}`);
@@ -196,6 +201,7 @@ function createServer(cfg = config) {
 
   async function stop() {
     clearInterval(heartbeat);
+    matchmaker.stop();
     economy.stop();
     for (const ws of wss.clients) ws.terminate();
     await new Promise(r => wss.close(r));
@@ -203,7 +209,7 @@ function createServer(cfg = config) {
     if (matches.timer) clearInterval(matches.timer);
   }
 
-  return { start, stop, rooms, matches, sessions, results, httpServer, economy };
+  return { start, stop, rooms, matches, sessions, results, httpServer, economy, matchmaker };
 }
 
 if (require.main === module) {

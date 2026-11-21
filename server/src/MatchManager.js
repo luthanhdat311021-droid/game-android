@@ -266,6 +266,14 @@ class MatchManager {
 
   backToLobby(room, match) {
     if (room.match !== match || !this.rooms.rooms.has(room.code)) return;
+    if (room.ranked) {
+      // ranked rooms are one-shot: everybody returns to the menu and can queue again
+      for (const m of [...room.members.values()]) {
+        const s = this.sessions.byPlayer.get(m.playerId);
+        if (s) { this.rooms.leave(s); this.sessions.send(s, { t: 'left_room' }); }
+      }
+      return;
+    }
     room.match = null;
     room.status = STATUS.LOBBY;
     for (const m of room.members.values()) if (!m.isBot) m.ready = false;

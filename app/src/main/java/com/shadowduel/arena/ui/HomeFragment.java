@@ -52,6 +52,9 @@ public class HomeFragment extends Fragment {
             if (!online()) return;
             App.get().client().send(GameClient.json("t", "quick_match", "mode", mode(), "charId", App.get().prefs().character()));
         });
+        v.rankedMatch.setOnClickListener(x -> {
+            if (online()) startRanked();
+        });
         v.createRoom.setOnClickListener(x -> {
             if (online()) startActivity(new Intent(requireContext(), CreateRoomActivity.class).putExtra("mode", mode()));
         });
@@ -120,6 +123,68 @@ public class HomeFragment extends Fragment {
             return false;
         }
         return true;
+    }
+
+    // ------------------------------------------------------------ ranked matchmaking
+    private androidx.appcompat.app.AlertDialog rankedDialog;
+    private android.widget.TextView rankedText;
+    private final GameClient.Listener rankedListener = new GameClient.Listener() {
+        @Override
+        public void onMessage(String type, org.json.JSONObject m) {
+            if (rankedDialog == null) return;
+            switch (type) {
+                case "ranked_queue":
+                    int w = m.optInt("waitSec");
+                    rankedText.setText(String.format(java.util.Locale.US,
+                            "Rating của bạn: %d\nĐang tìm đối thủ trong khoảng ±%d rating\nThời gian chờ: %d:%02d\nNgười đang tìm trận: %d\n\nTrận rank: Free For All 2–4 người, tự bắt đầu. Thắng/thua sẽ thay đổi rating.",
+                            m.optInt("rating"), m.optInt("window"), w / 60, w % 60, m.optInt("inQueue")));
+                    break;
+                case "ranked_found":
+                    rankedText.setText("ĐÃ TÌM THẤY TRẬN! Đang vào…");
+                    closeRanked(false);
+                    break;
+                case "ranked_cancelled":
+                    closeRanked(false);
+                    break;
+                case "error":
+                    closeRanked(false);
+                    Snackbar.make(v.getRoot(), "RANKED_LOGIN_REQUIRED".equals(m.optString("code"))
+                            ? "Đấu rank cần đăng nhập tài khoản (email hoặc Google)" : Dialogs.errorText(m), Snackbar.LENGTH_LONG).show();
+                    break;
+            }
+        }
+
+        @Override
+        public void onConnection(GameClient.State state, String error) {
+            if (state == GameClient.State.OFFLINE) closeRanked(false);
+        }
+    };
+
+    private void startRanked() {
+        if (!com.shadowduel.arena.data.Supa.signedIn(requireContext())) {
+            Snackbar.make(v.getRoot(), "Đấu rank cần đăng nhập tài khoản (email hoặc Google)", Snackbar.LENGTH_LONG).show();
+            return;
+        }
+        rankedText = new android.widget.TextView(requireContext());
+        int pad = (int) (22 * getResources().getDisplayMetrics().density);
+        rankedText.setPadding(pad, pad / 2, pad, 0);
+        rankedText.setText("Đang vào hàng chờ…");
+        rankedText.setTextSize(15);
+        rankedDialog = new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("ĐANG TÌM TRẬN RANK")
+                .setView(rankedText)
+                .setCancelable(false)
+                .setNegativeButton("HỦY TÌM", (d, w) -> closeRanked(true))
+                .show();
+        App.get().client().addListener(rankedListener);
+        App.get().client().send(GameClient.json("t", "ranked_join", "charId", App.get().prefs().character()));
+    }
+
+    private void closeRanked(boolean cancel) {
+        if (cancel) App.get().client().send(GameClient.json("t", "ranked_cancel"));
+        App.get().client().removeListener(rankedListener);
+        if (rankedDialog != null) rankedDialog.dismiss();
+        rankedDialog = null;
     }
 
     private void askCode() {

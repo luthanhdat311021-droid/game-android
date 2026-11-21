@@ -32,6 +32,7 @@ class Room {
     this.isPrivate = !!opts.isPrivate;
     this.password = this.isPrivate ? cleanText(opts.password, 32, '') : '';
     this.allowJoinInProgress = this.mode === 'ffa' && opts.allowJoinInProgress === true;
+    this.ranked = false;
     this.friendlyFire = opts.friendlyFire === true;
     this.hostId = host.playerId;
     this.status = STATUS.LOBBY;
@@ -72,7 +73,7 @@ class Room {
     return {
       id: this.id, code: this.code, name: this.name, mode: this.mode, map: this.mapId,
       players: this.members.size, maxPlayers: this.maxPlayers, status: this.status,
-      isPrivate: this.isPrivate, hostName: (this.members.get(this.hostId) || {}).name || ''
+      isPrivate: this.isPrivate, ranked: this.ranked, hostName: (this.members.get(this.hostId) || {}).name || ''
     };
   }
 
