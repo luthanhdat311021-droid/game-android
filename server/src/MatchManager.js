@@ -9,6 +9,7 @@ const { GameWorld } = require('./game/GameWorld');
 const { BTN, BTN_MASK, PROTOCOL_VERSION } = require('./game/constants');
 const { SnapshotBuilder, ClientView } = require('./net/SnapshotBuilder');
 const { STATUS } = require('./RoomManager');
+const { computeStats } = require('./game/ItemStats');
 
 const HELD = BTN.BLOCK | BTN.JUMP_HELD;
 const QUEUE_MAX = 8;
@@ -41,13 +42,14 @@ class Match {
     const look = Object.assign({}, all['*'] || {}, all[m.charId] || {});
     this.looks = this.looks || new Map();
     this.looks.set(fid, look);
-    return { id: fid, name: m.name, charId: m.charId, team: m.team, isBot: m.isBot, userId: m.userId, slot: m.slot };
+    const stats = computeStats(look);
+    return { id: fid, name: m.name, charId: m.charId, team: m.team, isBot: m.isBot, userId: m.userId, slot: m.slot, stats };
   }
 
   roster() {
     // cosmetics only change how a fighter looks; stats are always the standard character stats
     return this.world.fighters.map(f => ({ id: f.id, name: f.name, charId: f.charId, team: f.team, isBot: f.isBot, slot: f.slot,
-      skin: (this.looks.get(f.id) || {}).skin || null, weapon: (this.looks.get(f.id) || {}).weapon || null, effect: (this.looks.get(f.id) || {}).effect || null }));
+      skin: (this.looks.get(f.id) || {}).skin || null, weapon: (this.looks.get(f.id) || {}).weapon || null, effect: (this.looks.get(f.id) || {}).effect || null, stats: f.stats || null }));
   }
 
   startMessage(playerId) {

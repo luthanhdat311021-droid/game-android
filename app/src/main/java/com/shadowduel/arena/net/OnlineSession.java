@@ -109,6 +109,8 @@ public final class OnlineSession implements GameSession, GameClient.MatchSink {
             f.blade = com.shadowduel.arena.data.Economy.color(weapon, "blade");
             f.spawnFx = effect == null ? null : effect.optString("spawn", null);
             f.killFx = effect == null ? null : effect.optString("kill", null);
+            JSONObject st = p.optJSONObject("stats");   // decided by the server; mirrored for HUD + prediction
+            if (st != null) f.applyStats(st.optInt("attack_pct"), st.optInt("defense_pct"), st.optInt("hp_pct"), st.optInt("speed_pct"));
             f.known = false;
             fighters.put(id, f);
             ordered.add(f);

@@ -24,8 +24,15 @@ class Fighter {
     this.w = P.bodyW; this.h = P.bodyH;
     this.maxHp = c.hp; this.attack = c.attack; this.defense = c.defense;
     this.speed = c.speed; this.jumpV = c.jump;
+    // equipment bonuses (already capped by ItemStats.computeStats)
+    const st = opts.stats || {};
+    if (st.hp_pct) this.maxHp = Math.round(c.hp * (1 + st.hp_pct / 100));
+    if (st.attack_pct) this.attack = Math.round(c.attack * (1 + st.attack_pct / 100));
+    if (st.defense_pct) this.defense = Math.round(c.defense * (1 + st.defense_pct / 100));
+    if (st.speed_pct) this.speed = Math.round(c.speed * (1 + st.speed_pct / 100));
+    this.stats = st;
     this.x = 0; this.y = 0; this.vx = 0; this.vy = 0; this.facing = 1;
-    this.hp = c.hp; this.energy = 0;
+    this.hp = this.maxHp; this.energy = 0;
     this.grounded = false; this.groundOneWay = false; this.onMover = -1;
     this.jumps = 2; this.airT = 0; this.dropT = 0;
     this.act = ACT.NONE; this.actT = 0; this.combo = 0; this.queued = 0;

@@ -76,7 +76,8 @@ public class InventoryActivity extends EconomyActivity {
         b.cardIcon.setItem(def);
         b.cardTitle.setText(def.optString("name") + (def.optBoolean("stackable") ? "  ×" + r.optInt("quantity") : ""));
         String exp = r.isNull("expires_at") ? "" : expired(r) ? "  ·  ĐÃ HẾT HẠN" : "  ·  hết hạn " + r.optString("expires_at").substring(0, 10);
-        b.cardSub.setText(def.optString("description") + "\nNguồn: " + r.optString("source") + exp);
+        String bonus = com.shadowduel.arena.data.Economy.statText(def);
+        b.cardSub.setText((bonus.isEmpty() ? def.optString("description") : bonus) + "\nNguồn: " + r.optString("source") + exp);
         boolean isEq = equipped.contains(id);
         boolean equippable = cat.equals("skin") || cat.equals("weapon") || cat.equals("equipment") || cat.equals("effect")
                 || cat.equals("emote") || cat.equals("nameplate");

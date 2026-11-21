@@ -211,3 +211,23 @@ test('dash and attack states run their course', () => {
   assert.ok(f.x > 650, 'dash moved far');
 });
 
+
+test('equipment stat bonuses are applied by the server and capped at +30%', () => {
+  const { computeStats } = require('../src/game/ItemStats');
+  const stats = computeStats({ weapon: { stats: { attack_pct: 12 } }, equipment: { stats: { defense_pct: 15, hp_pct: 10 } } });
+  assert.deepEqual(stats, { attack_pct: 12, defense_pct: 15, hp_pct: 10, speed_pct: 0 });
+  assert.equal(computeStats({ weapon: { stats: { attack_pct: 90 } } }).attack_pct, 30, 'capped');
+  const w = world([Object.assign(P(0, 'ryujin'), { stats }), P(1, 'ryujin')]);
+  const [geared, plain] = w.fighters;
+  assert.equal(geared.maxHp, Math.round(1100 * 1.1));
+  assert.equal(geared.hp, geared.maxHp);
+  assert.equal(geared.attack, Math.round(115 * 1.12));
+  assert.equal(plain.attack, 115);
+  // a geared hit deals more damage than a plain one
+  lineUp(w, [600, 650]);
+  w.fighters[1].x = 650;
+  run(w, 1, new Map([[0, { mx: 0, b: BTN.ATTACK }]]));
+  run(w, 10, new Map());
+  const dmg = plain.maxHp - plain.hp;
+  assert.equal(dmg, Math.round((65 * geared.attack / 100) * (100 / (100 + plain.defense))));
+});

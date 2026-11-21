@@ -21,8 +21,10 @@ public final class Fighter {
     public int team;
     public final boolean isBot;
     public final double w, h;
-    public final int maxHp, attack, defense;
-    public final double speed, jumpV;
+    public int maxHp, attack, defense;
+    public double speed;
+    public final double jumpV;
+    public static final int MAX_BONUS_PCT = 30;
 
     public double x, y, vx, vy;
     public int facing = 1;
@@ -78,6 +80,23 @@ public final class Fighter {
         this.speed = def.speed;
         this.jumpV = def.jump;
         this.hp = def.hp;
+    }
+
+    /** Equipment bonuses in percent (same formula and cap as server ItemStats.js). */
+    public void applyStats(int attackPct, int defensePct, int hpPct, int speedPct) {
+        attackPct = clampPct(attackPct);
+        defensePct = clampPct(defensePct);
+        hpPct = clampPct(hpPct);
+        speedPct = clampPct(speedPct);
+        maxHp = (int) Math.round(def.hp * (1 + hpPct / 100.0));
+        attack = (int) Math.round(def.attack * (1 + attackPct / 100.0));
+        defense = (int) Math.round(def.defense * (1 + defensePct / 100.0));
+        speed = Math.round(def.speed * (1 + speedPct / 100.0));
+        hp = maxHp;
+    }
+
+    private static int clampPct(int v) {
+        return Math.max(0, Math.min(MAX_BONUS_PCT, v));
     }
 
     public Defs.Move move() {

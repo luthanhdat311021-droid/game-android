@@ -26,6 +26,7 @@ public final class Economy {
     public static int trainingDefensePct;
     public static final Map<String, JSONObject> weaponFx = new HashMap<>();
     public static String spawnFx, killFx;
+    public static JSONObject equipmentFx;
 
     /** Applies the signed-in player's equipped cosmetics to a fighter (look only). */
     public static void dress(com.shadowduel.arena.game.sim.Fighter f) {
@@ -35,6 +36,32 @@ public final class Economy {
         f.blade = color(w, "blade");
         f.spawnFx = spawnFx;
         f.killFx = killFx;
+        int[] st = stats(w, equipmentFx);
+        f.applyStats(st[0], st[1], st[2], st[3]);
+    }
+
+    /** Sum of weapon + equipment bonuses: [attack, defense, hp, speed] percent. */
+    public static int[] stats(JSONObject weapon, JSONObject equipment) {
+        int[] out = new int[4];
+        String[] keys = {"attack_pct", "defense_pct", "hp_pct", "speed_pct"};
+        for (JSONObject fx : new JSONObject[]{weapon, equipment}) {
+            JSONObject s = fx == null ? null : fx.optJSONObject("stats");
+            for (int i = 0; s != null && i < 4; i++) out[i] += s.optInt(keys[i]);
+        }
+        return out;
+    }
+
+    /** Readable bonus text for an item, e.g. "+12% sát thương". */
+    public static String statText(JSONObject item) {
+        JSONObject fx = item == null ? null : item.optJSONObject("gameplay_effect");
+        JSONObject s = fx == null ? null : fx.optJSONObject("stats");
+        if (s == null) return "";
+        StringBuilder b = new StringBuilder();
+        if (s.optInt("attack_pct") > 0) b.append("+").append(s.optInt("attack_pct")).append("% sát thương  ");
+        if (s.optInt("defense_pct") > 0) b.append("+").append(s.optInt("defense_pct")).append("% phòng thủ  ");
+        if (s.optInt("hp_pct") > 0) b.append("+").append(s.optInt("hp_pct")).append("% máu  ");
+        if (s.optInt("speed_pct") > 0) b.append("+").append(s.optInt("speed_pct")).append("% tốc độ  ");
+        return b.toString().trim();
     }
 
     public static int color(JSONObject o, String key) {
@@ -99,6 +126,7 @@ public final class Economy {
                         skinPalette.clear();
                         trainingDefensePct = 0;
                         weaponFx.clear();
+                        equipmentFx = null;
                         spawnFx = null;
                         killFx = null;
                         for (int i = 0; eq != null && i < eq.length(); i++) {
@@ -107,6 +135,7 @@ public final class Economy {
                             JSONObject gfx = it == null ? null : it.optJSONObject("gameplay_effect");
                             if (it != null && gfx != null && owned.contains(r.optString("item_id"))) {
                                 if ("weapon".equals(r.optString("slot"))) weaponFx.put(it.optString("character_id", r.optString("character_id")), gfx);
+                                if ("equipment".equals(r.optString("slot"))) equipmentFx = gfx;
                                 if ("effect".equals(r.optString("slot"))) {
                                     if (gfx.has("spawn")) spawnFx = gfx.optString("spawn");
                                     if (gfx.has("kill")) killFx = gfx.optString("kill");

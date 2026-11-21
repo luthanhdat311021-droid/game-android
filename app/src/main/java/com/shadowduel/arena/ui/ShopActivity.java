@@ -73,7 +73,8 @@ public class ShopActivity extends EconomyActivity {
         } else {
             b.cardIcon.setItem(def);
             b.cardTitle.setText(p.optString("title") + (p.optInt("quantity", 1) > 1 ? " ×" + p.optInt("quantity") : ""));
-            b.cardSub.setText(def == null ? "" : def.optString("description"));
+            String bonus = Economy.statText(def);
+            b.cardSub.setText(def == null ? "" : bonus.isEmpty() ? def.optString("description") : bonus);
         }
         b.cardButton.setText(price(p));
         b.cardButton.setBackgroundTintList(android.content.res.ColorStateList.valueOf(getColor(
@@ -86,7 +87,8 @@ public class ShopActivity extends EconomyActivity {
         if (def != null) b.getRoot().setOnClickListener(x -> new MaterialAlertDialogBuilder(this).setTitle(def.optString("name"))
                 .setMessage(def.optString("description") + "\n\nĐộ hiếm: " + Economy.rarityName(def.optString("rarity"))
                         + ("skin".equals(def.optString("category")) || "weapon".equals(def.optString("category")) || "effect".equals(def.optString("category"))
-                        ? "\nVật phẩm trang trí — không thay đổi chỉ số chiến đấu." : ""))
+                        && Economy.statText(def).isEmpty() ? "\nVật phẩm trang trí — không thay đổi chỉ số chiến đấu."
+                        : Economy.statText(def).isEmpty() ? "" : "\nChỉ số: " + Economy.statText(def) + " (tối đa +30% mỗi chỉ số)"))
                 .setPositiveButton("OK", null).show());
     }
 
