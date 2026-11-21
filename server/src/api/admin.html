@@ -19,7 +19,7 @@
 <header>
   <h1>SHADOW DUEL · Admin</h1>
   <span id="who" class="muted">Chưa đăng nhập</span>
-  <input id="email" placeholder="email admin"><input id="pass" type="password" placeholder="mật khẩu"><button id="login">Đăng nhập</button>
+  <input id="email" placeholder="email admin"><input id="pass" type="password" placeholder="mật khẩu"><button id="login">Đăng nhập</button><button id="google">Đăng nhập Google</button>
   <span style="flex:1"></span>
   <button data-tab="orders" class="on">Đơn nạp</button><button data-tab="tx">Giao dịch</button>
   <button data-tab="items">Vật phẩm</button><button data-tab="products">Shop</button><button data-tab="quests">Nhiệm vụ</button><button data-tab="audit">Audit log</button>
@@ -43,6 +43,19 @@ $('#login').onclick = async () => {
   if (!r.ok) { $('#who').textContent = 'Sai đăng nhập'; return; }
   token = b.access_token; sessionStorage.setItem('sd_admin_token', token); $('#who').textContent = b.user.email; $('#pass').value = ''; show();
 };
+// Google sign-in through Supabase (implicit flow: token returns in the URL fragment of /admin)
+$('#google').onclick = () => {
+  location.href = SUPA + '/auth/v1/authorize?provider=google&redirect_to=' + encodeURIComponent(location.origin + '/admin');
+};
+(function takeOAuthToken() {
+  const h = new URLSearchParams(location.hash.slice(1));
+  if (h.get('access_token')) {
+    token = h.get('access_token'); sessionStorage.setItem('sd_admin_token', token);
+    history.replaceState(null, '', location.pathname);   // keep the token out of history / screenshots
+  } else if (h.get('error_description')) {
+    $('#who').textContent = 'Google: ' + h.get('error_description'); history.replaceState(null, '', location.pathname);
+  }
+})();
 document.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => {
   document.querySelectorAll('[data-tab]').forEach(x => x.classList.toggle('on', x === b)); tab = b.dataset.tab; show();
 });
